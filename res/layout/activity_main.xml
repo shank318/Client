@@ -1,0 +1,50 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/viewportbackground"
+    android:gravity="center"
+     android:onClick="onClick"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/iduser"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:imeOptions="actionNext"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/edittextbackground"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="User name"
+        android:maxLines="1"
+        android:padding="5dp" />
+
+    <EditText
+        android:id="@+id/idpass"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/iduser"
+        android:layout_margin="30dp"
+        android:imeOptions="actionDone"
+        android:background="@drawable/edittextbackground"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:gravity="center"
+        android:hint="password"
+        android:maxLines="1"
+        android:padding="5dp" />
+
+    <Button
+        android:id="@+id/idlog"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/idpass"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/buttonbackground"
+        android:text="Login"
+        android:textColor="#ffffff" />
+
+</RelativeLayout>

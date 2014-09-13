@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:onClick="onClick"
+    android:background="@color/viewportbackground"
+    android:padding="8dp" >
+
+    <EditText
+        android:id="@+id/idunicode"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/edittextbackground"
+        android:ems="10"
+        android:hint="uniquecode"
+        android:paddingLeft="5dp" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/rl2"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edittextbackground" >
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" >
+        </ListView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl2"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@+id/idunicode"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_toLeftOf="@+id/camerainseption" >
+
+        <Spinner
+            android:id="@+id/idspiner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/idupload"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayout1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="19dp"
+        android:background="@drawable/buttonbackground"
+        android:text="Upload"
+        android:textColor="#ffffff" />
+
+    <ImageButton
+        android:id="@+id/camerainseption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/rl2"
+        android:layout_toRightOf="@+id/idupload"
+        android:background="@null"
+        android:src="@drawable/ic_camera" />
+
+    <ImageButton
+        android:id="@+id/attachinseption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/camerainseption"
+        android:layout_toRightOf="@+id/camerainseption"
+        android:background="@null"
+        android:layout_marginLeft="8dp"
+        android:src="@drawable/ic_attach" />
+
+</RelativeLayout>

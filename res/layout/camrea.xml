@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/viewportbackground" >
+
+    <SurfaceView
+        android:id="@+id/surfacview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/capture"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp" />
+
+    <ImageButton
+        android:id="@+id/retake"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignBottom="@+id/capture"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="28dp"
+        android:background="@drawable/ic_retake" />
+
+    <ImageButton
+        android:id="@+id/capture"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/ic_capture" />
+
+    <ImageButton
+        android:id="@+id/ok"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignBottom="@+id/capture"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="28dp"
+        android:background="@drawable/ic_ok" />
+
+<!--     <ImageView -->
+<!--         android:id="@+id/capturedImage" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="match_parent" -->
+<!--         android:layout_above="@+id/capture" -->
+<!--         android:layout_alignTop="@+id/surfacview" -->
+<!--         android:layout_marginBottom="20dp" -->
+<!--         android:layout_marginLeft="8dp" -->
+<!--         android:scaleType="fitXY" -->
+<!--         android:layout_marginRight="8dp" -->
+<!--          /> -->
+
+</RelativeLayout>
