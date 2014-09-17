@@ -14,8 +14,9 @@ import com.loopj.android.http.RequestParams;
 
 public class CallNetwork {
 
-	private static final String BASE_URL = "http://49.50.76.122/Retails/Android/login.php";
-
+	//private static final String BASE_URL = "http://49.50.76.122/Retails/Android/login.php";
+	
+	private static final String BASE_URL = "http://49.50.76.122/Retails/Android/upload.php";
 	  private static AsyncHttpClient client = new AsyncHttpClient();
 
 	  public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
@@ -23,17 +24,12 @@ public class CallNetwork {
 	      
 	  }
 
-	  public static void post(Context context,String url, JSONObject params, AsyncHttpResponseHandler responseHandler) {
+	  public static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
 	     // client.post(getAbsoluteUrl(url), params, responseHandler);
 	      
-		try {
-			StringEntity entity = new StringEntity(params.toString());
-			client.post(context, getAbsoluteUrl(url), entity, "application/json", responseHandler);
+			client.addHeader("Content-Type", " application/x-www-form-urlencoded");
+			client.post(getAbsoluteUrl(url), params, responseHandler);
 		      Log.e("URL", client+"");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	      
 	  }
 

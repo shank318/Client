@@ -105,7 +105,7 @@ public class Cam extends Activity implements SurfaceHolder.Callback,OnClickListe
 
 				Intent i=new Intent();
 				i.putExtra("res", filename);
-				Log.e("hello00000", filename);
+				Log.e("hello00000", filename+"");
 				setResult(6, i);
 				finish();
 			}
@@ -159,6 +159,8 @@ public class Cam extends Activity implements SurfaceHolder.Callback,OnClickListe
 	/** The jpeg callback. */
     PictureCallback jpegCallback = new PictureCallback() {
         public void onPictureTaken(byte[] data, Camera camera) {
+        	
+        	Log.e("DEBUG", "aaa");
             FileOutputStream outStream = null;
             try {
                 File miDirs = new File(
@@ -166,20 +168,17 @@ public class Cam extends Activity implements SurfaceHolder.Callback,OnClickListe
                 if (!miDirs.exists())
                     miDirs.mkdirs();
 
-                final Calendar c = Calendar.getInstance();
-                String new_Date = c.get(Calendar.DAY_OF_MONTH) + "-"
-                        + ((c.get(Calendar.MONTH)) + 1) + "-"
-                        + c.get(Calendar.YEAR) + " " + c.get(Calendar.HOUR)
-                        + "-" + c.get(Calendar.MINUTE) + "-"
-                        + c.get(Calendar.SECOND);
+               
 
-                filename = String.format(
-                        Environment.getExternalStorageDirectory() + "/Retails"
-                                + "/%s.jpg", "(" + new_Date + ")");
+                filename = System.currentTimeMillis()+".jpg";
                 
-                File file = new File(filename);
+                File file = new File(miDirs.toString(),filename);
+                filename= file.getAbsolutePath();
                 
-                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                BitmapFactory.Options options=new BitmapFactory.Options();
+                options.inSampleSize = 8;
+                options.inScaled=false;
+                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length,options);
                 
                 Matrix matrix = new Matrix();
       	        matrix.postRotate(90);
@@ -187,6 +186,7 @@ public class Cam extends Activity implements SurfaceHolder.Callback,OnClickListe
       		   
       		    ByteArrayOutputStream bos = new ByteArrayOutputStream();
       		   
+      		    
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
                 byte[] bitmapdata = bos.toByteArray();
                 
@@ -195,8 +195,7 @@ public class Cam extends Activity implements SurfaceHolder.Callback,OnClickListe
                 fos.write(bitmapdata);
                 fos.close();
                
-//                showImageView.setVisibility(View.GONE);
-//				showImageView.setImageBitmap(bitmap);
+
 				cam.stopPreview();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

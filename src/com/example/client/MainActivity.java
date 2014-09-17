@@ -1,16 +1,24 @@
 package com.example.client;
 
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.client.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
 
 
 import android.app.Activity;
@@ -23,6 +31,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,16 +46,36 @@ import android.view.inputmethod.InputMethodManager;
 
 public class MainActivity extends Activity
 {
+	
+
+
+
+
 	EditText username,password;
 	Button login;
-	
+	public  SharedPreferences mSharedPreferences;
+	SharedPreferences.Editor e;
 	ProgressDialog pd;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_main);
+
+		
+		// Shared Preferences
+		mSharedPreferences= getSharedPreferences(AppConstants.KEY, 0);
+		e = mSharedPreferences.edit();
+		
+		
+		if(!mSharedPreferences.getString("USERID", "").equals("")){
+			Intent i = new Intent(getApplicationContext(),Selection.class);
+			startActivity(i);
+		}
+
+
 		username=(EditText) findViewById(R.id.iduser);
 		password=(EditText) findViewById(R.id.idpass);
 		login=(Button) findViewById(R.id.idlog);
@@ -114,15 +144,12 @@ public class MainActivity extends Activity
 		});
 	}
 
-	
-	
-	
+
+
+
 	void checkCredentials(){
 		if(username.getText().toString().trim().length()!=0 && password.getText().toString().trim().length()!=0)
 		{
-			Intent i=new Intent(getApplicationContext(),Selection.class);
-			startActivity(i);
-			overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
 
 			try {
 				validateUserNamePassword();
@@ -142,69 +169,165 @@ public class MainActivity extends Activity
 
 	void validateUserNamePassword() throws JSONException{
 
-		JSONObject params = new JSONObject();
-        
+		RequestParams params = new RequestParams();
+
 		params.put("app_usr", username.getText().toString());
 		params.put("app_pwd", password.getText().toString());
 
-		CallNetwork.post(getApplicationContext(),"", params, new JsonHttpResponseHandler(){
+
+		CallNetwork.post("", params, new JsonHttpResponseHandler(){
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 				// If the response is JSONObject instead of expected JSONArray
-//				Intent i=new Intent(getApplicationContext(),Selection.class);
-//				startActivity(i);
-//				overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
+                
 				Log.e("DEBUG3", response+"");
+
+				if(response.toString().contains("status")){
+
+					Toast toast =Toast.makeText(MainActivity.this, "Wrong username or password", Toast.LENGTH_LONG);
+					toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+					toast.show();
+
+				}else{
+
+					try {
+						JSONArray installation = response.getJSONArray("installation_photo_type");
+
+						for(int i=0;i<installation.length();i++){
+
+							JSONObject obj = installation.getJSONObject(i);
+
+							String id = obj.getString("attachmenttypeid");
+							String type = obj.getString("attachmenttype");
+							HashMap<String, String> map = new HashMap<String, String>();
+							map.put("attachmenttypeid", id);
+							map.put("attachmenttype", type);
+
+							AppConstants.getInstance().installationPhotoTypeArray.add(map);
+
+						}
+
+						JSONArray inspection = response.getJSONArray("inspection_photo_type");
+						for(int i=0;i<inspection.length();i++){
+
+							JSONObject obj = inspection.getJSONObject(i);
+
+							String id = obj.getString("attachmenttypeid");
+							String type = obj.getString("attachmenttype");
+							HashMap<String, String> map = new HashMap<String, String>();
+							map.put("attachmenttypeid", id);
+							map.put("attachmenttype", type);
+
+							AppConstants.getInstance().inspectionPhotoTypeArray.add(map);
+
+						}
+
+						JSONArray checklist = response.getJSONArray("installation_checklist");
+						for(int i=0;i<checklist.length();i++){
+
+							JSONObject obj = checklist.getJSONObject(i);
+
+							String id = obj.getString("description");
+							String type = obj.getString("checklistid");
+							HashMap<String, String> map = new HashMap<String, String>();
+							map.put("description", id);
+							map.put("checklistid", type);
+
+							AppConstants.getInstance().checkListArray.add(map);
+
+						}
+
+						String user_id = response.getString("user_id");
+
+						e.putString("USERID", user_id);
+						e.apply();
+
+						Intent i=new Intent(getApplicationContext(),Selection.class);
+						startActivity(i);
+						overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
+
+						 saveRecentSearches();
+
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						Toast toast =Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_LONG);
+						toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+						toast.show();
+					}
+					
+					
+				}
+				pd.cancel();
 			}
-			
-			@Override
-		    public void onStart() {
-//				pd = new ProgressDialog(MainActivity.this, ProgressDialog.THEME_HOLO_LIGHT);
-//				pd.show();
-		    }
 
 			@Override
-			public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-				
-			//	pd.cancel();
-				// If the response is JSONObject instead of expected JSONArray
-//				Intent i=new Intent(getApplicationContext(),Selection.class);
-//				startActivity(i);
-//				overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
-				Toast toast =Toast.makeText(MainActivity.this, "Wrong username or password", Toast.LENGTH_LONG);
-				toast.setGravity(Gravity.TOP, 0, 300);
-				toast.show();
-				Log.e("DEBUG3", response+"");
+			public void onStart() {
+				pd = new ProgressDialog(MainActivity.this, ProgressDialog.THEME_HOLO_LIGHT);
+				pd.setMessage("Signing in...");
+				pd.show();
 			}
-			
+
+
+
 
 			@Override
 			public void onFailure(int statusCode, Header[] headers,
 					Throwable throwable, JSONObject errorResponse) {
 				// TODO Auto-generated method stub
-			//	pd.cancel();
-				
-				Toast toast =Toast.makeText(MainActivity.this, "Wrong username or password", Toast.LENGTH_LONG);
-				toast.setGravity(Gravity.TOP, 0, 0);
+					pd.cancel();
+
+				Toast toast =Toast.makeText(MainActivity.this, "Something went wrong", Toast.LENGTH_LONG);
+				toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 				toast.show();
-				
+
 				Log.e("DEBUG1", errorResponse+"");
 			}
 
-			
-			
-			
+
+
+
 
 		});
 	}
-	
-public void onClick(View view) {
 
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
 		
+		if(pd!=null && pd.isShowing())
+			pd.cancel();
+	}
+	
+	public void onClick(View view) {
+
+
 
 		InputMethodManager imm = (InputMethodManager) view.getContext()
 				.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 
+	void saveRecentSearches(){
+
+		// Check if the same term already exists
+		
+			
+			Gson gson = new Gson();
+			String installation = gson.toJson(AppConstants.getInstance().installationPhotoTypeArray);
+			String inspection = gson.toJson(AppConstants.getInstance().inspectionPhotoTypeArray);
+			String checklist = gson.toJson(AppConstants.getInstance().checkListArray);
+			
+			e.putString("inspectionPhotoType", inspection);
+			e.putString("installationPhotoType", installation);
+			e.putString("checklist", checklist);
+			
+			e.apply();
+		
+          Log.e("DEBUG", "Saved data.");
+	}
+	
+	
+	
 }

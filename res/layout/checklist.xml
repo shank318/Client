@@ -3,16 +3,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/viewportbackground"
-    android:orientation="vertical"
     android:padding="16dp" >
 
     <ListView
         android:id="@+id/checkListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" >
-
+        android:layout_above="@+id/idupload"
+        android:divider="@color/actionbar"
+        android:background="@drawable/edittextbackground"
+        android:dividerHeight="1dp" >
     </ListView>
+
+    <Button
+        android:id="@+id/idupload"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="19dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/buttonbackground"
+        android:text="Upload"
+        android:textColor="#ffffff" />
 
 </RelativeLayout>

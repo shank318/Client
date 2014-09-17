@@ -26,9 +26,6 @@ public class AppConstants {
 	
 	
 	
-	
-	
-	
    protected static final String KEY = "mypref";
 	 // Database Name
     protected static final String DATABASE_NAME = "Chance_database";

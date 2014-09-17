@@ -9,8 +9,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class Selection extends Activity{
+public class Selection extends BaseActivity{
 	Button inseption,installation;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -40,4 +41,7 @@ public class Selection extends Activity{
 		});
 		
 	}
+	
+	
+	
 }

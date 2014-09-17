@@ -7,7 +7,9 @@ import com.example.client.R;
 import com.example.client.Inseption.Listadapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -24,10 +26,11 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 
-public class Instalation extends Activity{
+public class Instalation extends BaseActivity{
 	private static final int RESULT_LOAD_IMAGE = 1;
 	Button next;
 	Spinner type;
@@ -35,6 +38,7 @@ public class Instalation extends Activity{
 	List< String> listviewlist=new ArrayList<String>();
 	Listadapter adapter;
 	ListView lv;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -45,10 +49,23 @@ public class Instalation extends Activity{
 		camra=(ImageButton) findViewById(R.id.camerainstal);
 		attach=(ImageButton) findViewById(R.id.attachinstal);
 		lv=(ListView) findViewById(R.id.list);
+
+
+
 		List<String> list=new ArrayList<String>();
-		list.add("Bottom View");
-		list.add("Right Side View");
-		list.add("Left Side View");
+		
+		if(AppConstants.getInstance().installationPhotoTypeArray.size()==0){
+			getRecent();
+		}
+
+		
+		
+
+		for(int i=0;i<AppConstants.getInstance().installationPhotoTypeArray.size();i++){
+			list.add(AppConstants.getInstance().installationPhotoTypeArray.get(i).get("attachmenttype"));
+
+		}
+		list.add(0,"Select");
 		adapter=new Listadapter(getApplicationContext(), R.id.list);
 		lv.setAdapter(adapter);
 		ArrayAdapter<String> arr=new ArrayAdapter<String>(this, android.R.layout.simple_selectable_list_item,list);
@@ -70,9 +87,12 @@ public class Instalation extends Activity{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent i=new Intent(getApplicationContext(), Cam.class) ;
-				startActivityForResult(i, 5);
-				//startActivity(i);
+				if(!type.getSelectedItem().toString().equals("Select")){
+					Intent i=new Intent(getApplicationContext(), Cam.class) ;
+					startActivityForResult(i, 5);
+				}else{
+					Toast.makeText(getApplicationContext(), "Please select the type of the photo", Toast.LENGTH_LONG).show();
+				}
 			}
 		});
 		attach.setOnClickListener(new OnClickListener() {
@@ -80,15 +100,20 @@ public class Instalation extends Activity{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				openGallery();
+				if(!type.getSelectedItem().toString().equals("Select")){
+					openGallery();
+				}else{
+					Toast.makeText(getApplicationContext(), "Please select the type of the photo", Toast.LENGTH_LONG).show();
+				}
 			}
 		});
 	}
 	private void openGallery() {
 		Intent i = new Intent(
 				Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-		startActivityForResult(i, RESULT_LOAD_IMAGE);
+		i.setType("image/*");
+		
+		startActivityForResult(Intent.createChooser(i, "Select Picture"), RESULT_LOAD_IMAGE);
 	}
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -100,10 +125,11 @@ public class Instalation extends Activity{
 
 				if(data!=null)
 				{
-					Log.e("helo", data.getStringExtra("res"));
-					listviewlist.add(data.getStringExtra("res"));
-
+					
+					
+					listviewlist.add(type.getSelectedItem().toString()+":-  "+data.getStringExtra("res"));
 					adapter.notifyDataSetChanged();
+					type.setSelection(0);
 				}
 			}
 
@@ -112,20 +138,21 @@ public class Instalation extends Activity{
 
 		}
 		if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-			Log.e("Shank", "okkkkkkkkkkkkkkkk");
+		
 			Uri selectedImage = data.getData();
 			String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
+			Log.e("Shank",filePathColumn.length+"");
 			Cursor cursor = getContentResolver().query(selectedImage,
 					filePathColumn, null, null, null);
 			cursor.moveToFirst();
 
 			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
 			String picturePath = cursor.getString(columnIndex);
-			Log.e("Shank", picturePath);
-			listviewlist.add(picturePath);
+			
+			listviewlist.add(type.getSelectedItem().toString()+":-  "+picturePath);
 
 			adapter.notifyDataSetChanged();
+			type.setSelection(0);
 			cursor.close();
 		}
 
@@ -156,8 +183,27 @@ public class Instalation extends Activity{
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					listviewlist.remove(position);
-					adapter.notifyDataSetChanged();
+					AlertDialog.Builder builder1 = new AlertDialog.Builder(Instalation.this,AlertDialog.THEME_HOLO_LIGHT);
+					builder1.setMessage("Do you want to delete this image?");
+					builder1.setCancelable(true);
+					builder1.setPositiveButton("Yes",
+							new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							
+							listviewlist.remove(position);
+							adapter.notifyDataSetChanged();
+							type.setSelection(0);
+						}
+					});
+					builder1.setNegativeButton("No",
+							new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
+
+					AlertDialog alert11 = builder1.create();
+					alert11.show();
 
 				}
 			});
@@ -191,7 +237,7 @@ public class Instalation extends Activity{
 
 	public void onClick(View view) {
 
-		
+
 
 		InputMethodManager imm = (InputMethodManager) view.getContext()
 				.getSystemService(Context.INPUT_METHOD_SERVICE);

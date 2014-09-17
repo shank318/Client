@@ -3,10 +3,10 @@
 
     <string name="app_name">Client</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Logout</string>
     
     
-     <string-array name="lifestyle">
+     <string-array name="checklist">
        
         <item>Yes</item>
         <item>NO</item>

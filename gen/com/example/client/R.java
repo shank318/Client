@@ -13,7 +13,7 @@ public final class R {
         public static final int right_slide_out=0x7f040001;
     }
     public static final class array {
-        public static final int lifestyle=0x7f080000;
+        public static final int checklist=0x7f080000;
     }
     public static final class attr {
     }
@@ -50,54 +50,62 @@ public final class R {
         public static final int ic_retake=0x7f02000d;
         public static final int ic_retake_press=0x7f02000e;
         public static final int icon2=0x7f02000f;
-        public static final int sk=0x7f020010;
-        public static final int splash_icon=0x7f020011;
-        public static final int splashbackground=0x7f020012;
+        public static final int loader=0x7f020010;
+        public static final int sk=0x7f020011;
+        public static final int splash_icon=0x7f020012;
+        public static final int splashbackground=0x7f020013;
     }
     public static final class id {
-        public static final int action_settings=0x7f0b001e;
-        public static final int actionbar=0x7f0b0016;
-        public static final int attachinseption=0x7f0b0010;
-        public static final int attachinstal=0x7f0b0014;
-        public static final int camerainseption=0x7f0b000e;
-        public static final int camerainstal=0x7f0b0011;
-        public static final int capture=0x7f0b0004;
-        public static final int checkListView=0x7f0b0007;
-        public static final int idincept=0x7f0b0019;
-        public static final int idinstal=0x7f0b001a;
-        public static final int idlog=0x7f0b0002;
-        public static final int idnext=0x7f0b0013;
-        public static final int idpass=0x7f0b0001;
-        public static final int idspi=0x7f0b0012;
-        public static final int idspiner=0x7f0b0009;
-        public static final int idunicode=0x7f0b000b;
-        public static final int idupload=0x7f0b000f;
-        public static final int iduser=0x7f0b0000;
-        public static final int imageButton1=0x7f0b001d;
-        public static final int imageView1=0x7f0b001c;
-        public static final int layo=0x7f0b0017;
-        public static final int list=0x7f0b000d;
-        public static final int ok=0x7f0b0006;
-        public static final int plusimage=0x7f0b0018;
-        public static final int relativeLayout1=0x7f0b000c;
-        public static final int remov=0x7f0b0015;
-        public static final int retake=0x7f0b0005;
-        public static final int rl2=0x7f0b0008;
-        public static final int root_layout=0x7f0b001b;
-        public static final int surfacview=0x7f0b0003;
-        public static final int text=0x7f0b000a;
+        public static final int action_settings=0x7f0b0022;
+        public static final int actionbar=0x7f0b0018;
+        public static final int attachinseption=0x7f0b0012;
+        public static final int attachinstal=0x7f0b0016;
+        public static final int button1=0x7f0b0001;
+        public static final int camerainseption=0x7f0b0011;
+        public static final int camerainstal=0x7f0b0013;
+        public static final int capture=0x7f0b0006;
+        public static final int checkBox1=0x7f0b001c;
+        public static final int checkListView=0x7f0b0009;
+        public static final int gridview=0x7f0b0000;
+        public static final int idincept=0x7f0b001d;
+        public static final int idinstal=0x7f0b001e;
+        public static final int idlog=0x7f0b0004;
+        public static final int idnext=0x7f0b0015;
+        public static final int idpass=0x7f0b0003;
+        public static final int idspi=0x7f0b0014;
+        public static final int idspiner=0x7f0b000c;
+        public static final int idunicode=0x7f0b000e;
+        public static final int idupload=0x7f0b000a;
+        public static final int iduser=0x7f0b0002;
+        public static final int imageButton1=0x7f0b0020;
+        public static final int imageView1=0x7f0b001b;
+        public static final int layo=0x7f0b0019;
+        public static final int list=0x7f0b0010;
+        public static final int ok=0x7f0b0008;
+        public static final int plusimage=0x7f0b001a;
+        public static final int relativeLayout1=0x7f0b000f;
+        public static final int remov=0x7f0b0017;
+        public static final int retake=0x7f0b0007;
+        public static final int rl2=0x7f0b000b;
+        public static final int root_layout=0x7f0b001f;
+        public static final int surfacview=0x7f0b0005;
+        public static final int text=0x7f0b000d;
+        public static final int textViewSpinnerItem=0x7f0b0021;
     }
     public static final class layout {
-        public static final int activity_main=0x7f030000;
-        public static final int camrea=0x7f030001;
-        public static final int checklist=0x7f030002;
-        public static final int checklistviewrow=0x7f030003;
-        public static final int inception=0x7f030004;
-        public static final int instalation=0x7f030005;
-        public static final int listviewxml=0x7f030006;
-        public static final int registrationlayout=0x7f030007;
-        public static final int selection=0x7f030008;
-        public static final int splash_layout=0x7f030009;
+        public static final int ac_image_grid=0x7f030000;
+        public static final int activity_main=0x7f030001;
+        public static final int camrea=0x7f030002;
+        public static final int checklist=0x7f030003;
+        public static final int checklistviewrow=0x7f030004;
+        public static final int inception=0x7f030005;
+        public static final int instalation=0x7f030006;
+        public static final int listviewxml=0x7f030007;
+        public static final int registrationlayout=0x7f030008;
+        public static final int row_multiphoto_item=0x7f030009;
+        public static final int selection=0x7f03000a;
+        public static final int splash_layout=0x7f03000b;
+        public static final int splnner_background=0x7f03000c;
     }
     public static final class menu {
         public static final int main=0x7f0a0000;
@@ -110,6 +118,7 @@ public final class R {
     public static final class style {
         public static final int AppTheme=0x7f090000;
         public static final int MyActionBar=0x7f090001;
+        public static final int SpinnerTextViewItem=0x7f090003;
         public static final int TitleBarTextColor=0x7f090002;
     }
 }
