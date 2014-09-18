@@ -1,6 +1,9 @@
 package com.example.client;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import com.example.client.R;
@@ -22,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -38,6 +42,13 @@ public class Instalation extends BaseActivity{
 	List< String> listviewlist=new ArrayList<String>();
 	Listadapter adapter;
 	ListView lv;
+	ArrayList<HashMap<String, String>> photoType = new ArrayList<HashMap<String,String>>();
+	
+	String master="";
+	String photoD="";
+	String images="";
+	String checkList="";
+	EditText uniqueCode;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,16 +61,16 @@ public class Instalation extends BaseActivity{
 		attach=(ImageButton) findViewById(R.id.attachinstal);
 		lv=(ListView) findViewById(R.id.list);
 
-
+		uniqueCode =(EditText) findViewById(R.id.idunicode);
 
 		List<String> list=new ArrayList<String>();
-		
+
 		if(AppConstants.getInstance().installationPhotoTypeArray.size()==0){
 			getRecent();
 		}
 
-		
-		
+
+
 
 		for(int i=0;i<AppConstants.getInstance().installationPhotoTypeArray.size();i++){
 			list.add(AppConstants.getInstance().installationPhotoTypeArray.get(i).get("attachmenttype"));
@@ -76,7 +87,13 @@ public class Instalation extends BaseActivity{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				
+				constructArray();
+				
 				Intent i=new Intent(getApplicationContext(), Checklist.class);
+				i.putExtra("master", master);
+				i.putExtra("photod", photoD);
+				i.putExtra("images", images);
 				startActivity(i);
 				overridePendingTransition(R.anim.right_slide_in, R.anim.right_slide_out);
 
@@ -109,11 +126,9 @@ public class Instalation extends BaseActivity{
 		});
 	}
 	private void openGallery() {
-		Intent i = new Intent(
-				Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-		i.setType("image/*");
-		
-		startActivityForResult(Intent.createChooser(i, "Select Picture"), RESULT_LOAD_IMAGE);
+		Intent i = new Intent(getApplicationContext(),MultiPhotoSelectActivity.class);
+
+		startActivityForResult(i, RESULT_LOAD_IMAGE);
 	}
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -125,8 +140,11 @@ public class Instalation extends BaseActivity{
 
 				if(data!=null)
 				{
-					
-					
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("id", AppConstants.getInstance().inspectionPhotoTypeArray.get(type.getSelectedItemPosition()-1).get("attachmenttypeid"));
+					map.put("value", data.getStringExtra("res"));
+					photoType.add(map);
+
 					listviewlist.add(type.getSelectedItem().toString()+":-  "+data.getStringExtra("res"));
 					adapter.notifyDataSetChanged();
 					type.setSelection(0);
@@ -138,22 +156,26 @@ public class Instalation extends BaseActivity{
 
 		}
 		if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-		
-			Uri selectedImage = data.getData();
-			String[] filePathColumn = { MediaStore.Images.Media.DATA };
-			Log.e("Shank",filePathColumn.length+"");
-			Cursor cursor = getContentResolver().query(selectedImage,
-					filePathColumn, null, null, null);
-			cursor.moveToFirst();
 
-			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-			String picturePath = cursor.getString(columnIndex);
-			
-			listviewlist.add(type.getSelectedItem().toString()+":-  "+picturePath);
+			ArrayList<String> filePathColumn = data.getStringArrayListExtra("res");
+
+
+			for(int i=0;i<filePathColumn.size();i++){
+				HashMap<String, String> map = new HashMap<String, String>();
+				File file = new File(filePathColumn.get(i));
+
+				map.put("id", AppConstants.getInstance().inspectionPhotoTypeArray.get(type.getSelectedItemPosition()-1).get("attachmenttypeid"));
+				map.put("value", file.getName());
+				photoType.add(map);
+			}
+
+
+			for(int i=0;i<filePathColumn.size();i++){
+				listviewlist.add(type.getSelectedItem().toString()+":-  "+filePathColumn.get(i));
+			}
 
 			adapter.notifyDataSetChanged();
 			type.setSelection(0);
-			cursor.close();
 		}
 
 
@@ -189,7 +211,7 @@ public class Instalation extends BaseActivity{
 					builder1.setPositiveButton("Yes",
 							new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
-							
+
 							listviewlist.remove(position);
 							adapter.notifyDataSetChanged();
 							type.setSelection(0);
@@ -244,4 +266,26 @@ public class Instalation extends BaseActivity{
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 
+
+
+	void constructArray(){
+
+
+		for(int i =0;i< photoType.size();i++){
+			photoD= type+photoType.get(i).get("id")+"-"+photoType.get(i).get("value")+",";
+			images= images+photoType.get(i).get("value")+",";
+		}
+
+		String userId = mSharedPreferences.getString("USERID", "");
+		Date date = new Date();
+		String datesting = date.toString();
+
+		master = "Unique_Code-"+uniqueCode.getText().toString()+","+
+				"Transaction_Type-inspection,"+"User_Id-"+userId+
+				",Transaction_Date-"+datesting;
+
+
+
+
+	}
 }

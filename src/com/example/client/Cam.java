@@ -173,7 +173,7 @@ public class Cam extends Activity implements SurfaceHolder.Callback,OnClickListe
                 filename = System.currentTimeMillis()+".jpg";
                 
                 File file = new File(miDirs.toString(),filename);
-                filename= file.getAbsolutePath();
+                
                 
                 BitmapFactory.Options options=new BitmapFactory.Options();
                 options.inSampleSize = 8;

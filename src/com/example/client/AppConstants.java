@@ -23,16 +23,25 @@ public class AppConstants {
 	protected  ArrayList<HashMap<String, String>> installationPhotoTypeArray;
 	protected  ArrayList<HashMap<String, String>> inspectionPhotoTypeArray;
 	protected  ArrayList<HashMap<String, String>> checkListArray;
+	protected  ArrayList<HashMap<String, String>> transactions;
 	
 	
 	
    protected static final String KEY = "mypref";
 	 // Database Name
     protected static final String DATABASE_NAME = "Chance_database";
+    
+    protected static final String MASTER ="master";
+    protected static final String PHOTO_DETAILS ="pd";
+    protected static final String CHECKLIST ="cl";
+    protected static final String IMAGES = "images";
+    
+    
 	private  AppConstants() {
 		inspectionPhotoTypeArray=new ArrayList<HashMap<String,String>>();
 		installationPhotoTypeArray=new ArrayList<HashMap<String,String>>();
 		checkListArray=new ArrayList<HashMap<String, String>>();
+		transactions = new ArrayList<HashMap<String,String>>();
 		
 		
 	}

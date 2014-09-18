@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.Type;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,6 +28,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
+
 
 
 import android.app.Activity;
@@ -56,6 +59,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -70,9 +74,19 @@ public class Inseption extends BaseActivity{
 	List< String> listviewlist=new ArrayList<String>();
 	Listadapter adapter;
 	ListView lv;
+	ProgressDialog pd;
+	EditText uniqueCode;
 
-	String path="";
+	ArrayList<HashMap<String, String>> photoType = new ArrayList<HashMap<String,String>>();
 	
+
+	String master="";
+	String photoD="";
+	String images="";
+	String checkList="";
+
+	DatabaseHandler db;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -83,7 +97,9 @@ public class Inseption extends BaseActivity{
 		attach=(ImageButton) findViewById(R.id.attachinseption);
 		type=(Spinner) findViewById(R.id.idspiner);
 		lv=(ListView) findViewById(R.id.list);
+		uniqueCode =(EditText) findViewById(R.id.idunicode);
 
+		db = new DatabaseHandler(this);
 
 
 
@@ -131,27 +147,35 @@ public class Inseption extends BaseActivity{
 				}
 			}
 		});
-		
-		
-		
+
+
+
 		findViewById(R.id.idupload).setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 				//new uploadvideo(getApplicationContext()).execute();
+
+				if(uniqueCode.getText().toString().trim().length()>0){
+
 				try {
 					validateUserNamePassword();
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
+				}else{
+					uniqueCode.setError("Please enter unique code");
+				}
+				
 			}
 		});
 	}
 	private void openGallery() {
 		Intent i = new Intent(getApplicationContext(),MultiPhotoSelectActivity.class);
-				
+
 		startActivityForResult(i, RESULT_LOAD_IMAGE);
 	}
 	@Override
@@ -168,12 +192,18 @@ public class Inseption extends BaseActivity{
 				if(data!=null)
 				{
 
+
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("id", AppConstants.getInstance().inspectionPhotoTypeArray.get(type.getSelectedItemPosition()-1).get("attachmenttypeid"));
+					map.put("value", data.getStringExtra("res"));
+					photoType.add(map);
+
 					listviewlist.add(type.getSelectedItem().toString()+":-  "+data.getStringExtra("res"));
 					adapter.notifyDataSetChanged();
 					type.setSelection(0);
+
 					
-					path = data.getStringExtra("res");
-					
+
 				}
 			}
 
@@ -183,24 +213,27 @@ public class Inseption extends BaseActivity{
 		}
 		if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
 
-	//		Uri selectedImage = data.getData();
+
 			ArrayList<String> filePathColumn = data.getStringArrayListExtra("res");
 
-//			Cursor cursor = getContentResolver().query(selectedImage,
-//					filePathColumn, null, null, null);
-//			cursor.moveToFirst();
-//
-//			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//			String picturePath = cursor.getString(columnIndex);
-//			Log.e("Shank", picturePath);
-			
+
 			for(int i=0;i<filePathColumn.size();i++){
-			listviewlist.add(type.getSelectedItem().toString()+":-  "+filePathColumn.get(i));
+				HashMap<String, String> map = new HashMap<String, String>();
+				File file = new File(filePathColumn.get(i));
+
+				map.put("id", AppConstants.getInstance().inspectionPhotoTypeArray.get(type.getSelectedItemPosition()-1).get("attachmenttypeid"));
+				map.put("value", file.getName());
+				photoType.add(map);
+			}
+
+
+			for(int i=0;i<filePathColumn.size();i++){
+				listviewlist.add(type.getSelectedItem().toString()+":-  "+filePathColumn.get(i));
 			}
 
 			adapter.notifyDataSetChanged();
 			type.setSelection(0);
-	//		cursor.close();
+			//		cursor.close();
 		}
 
 
@@ -299,38 +332,58 @@ public class Inseption extends BaseActivity{
 
 		RequestParams params = new RequestParams();
 
-//		Log.e("DEBUG", new FileBody(new File(path))+"");
-		File file = new File(path);
-		
-		try {
-			params.put("app_image",file);
-			params.put("app_image",file);
-			params.put("app_image",file);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		Log.e("DETAILS", master+"   "+photoD+"  "+checkList);
+		params.put("sync_master",master);
+		params.put("sync_photo",photoD);
+		params.put("sync_checklist",checkList);
+
+
+
 		CallNetwork.post("", params, new JsonHttpResponseHandler(){
-			
+
+			@Override
+			public void onProgress(int bytesWritten, int totalSize) {
+				// TODO Auto-generated method stub
+				super.onProgress(bytesWritten, totalSize);
+				Log.e("ONPROGRESS", bytesWritten+"");
+			}
+
 			@Override
 			public void onFailure(int statusCode, Header[] headers,
 					String responseString, Throwable throwable) {
 				// TODO Auto-generated method stub
-				Log.e("DEBUG1", responseString+"");
+				Log.e("ONFALIURE", responseString+"aaaaaa");
+				pd.cancel();
+				
+				db.addFeeds(master, photoD, images, checkList);
+
+			}
+
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+				// If the response is JSONObject instead of expected JSONArray
+				pd.cancel();
+				Log.e("SUCCESS", response+"");
+
 			}
 
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 				// If the response is JSONObject instead of expected JSONArray
-                
-				Log.e("DEBUG", response+"");
+				pd.cancel();
+				Log.e("SUCCESS", response+"");
 
 			}
 
+
 			@Override
 			public void onStart() {
-				
+
+				pd = new ProgressDialog(Inseption.this, ProgressDialog.THEME_HOLO_LIGHT);
+				pd.setMessage("Signing in...");
+				pd.show();
+
+				constructArray();
 			}
 
 
@@ -340,13 +393,13 @@ public class Inseption extends BaseActivity{
 			public void onFailure(int statusCode, Header[] headers,
 					Throwable throwable, JSONObject errorResponse) {
 				// TODO Auto-generated method stub
-				
 
+				pd.cancel();
 				Toast toast =Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG);
 				toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 				toast.show();
-
-				Log.e("DEBUG1", errorResponse+"");
+				db.addFeeds(master, photoD, images, checkList);
+				Log.e("FALIURE", errorResponse+"");
 			}
 
 
@@ -354,6 +407,28 @@ public class Inseption extends BaseActivity{
 
 
 		});
+	}
+
+
+	void constructArray(){
+
+
+		for(int i =0;i< photoType.size();i++){
+			photoD= type+photoType.get(i).get("id")+"-"+photoType.get(i).get("value")+",";
+			images= images+photoType.get(i).get("value")+",";
+		}
+
+		String userId = mSharedPreferences.getString("USERID", "");
+		Date date = new Date();
+		String datesting = date.toString();
+
+		master = "Unique_Code-"+uniqueCode.getText().toString()+","+
+				"Transaction_Type-inspection,"+"User_Id-"+userId+
+				",Transaction_Date-"+datesting;
+
+
+
+
 	}
 
 }
