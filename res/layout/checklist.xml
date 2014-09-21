@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/idupload"
         android:divider="@color/actionbar"
+        android:scrollbars="none"
         android:background="@drawable/edittextbackground"
         android:dividerHeight="1dp" >
     </ListView>

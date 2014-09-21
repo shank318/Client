@@ -15,7 +15,8 @@
         android:layout_marginTop="30dp"
         android:background="@drawable/edittextbackground"
         android:ems="10"
-        android:hint="uniquecode"
+        android:inputType="number"
+        android:hint="Uniquecode"
         android:paddingLeft="5dp" />
 
     <RelativeLayout
