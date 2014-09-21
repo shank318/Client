@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.Header;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -336,12 +337,25 @@ public class Checklist extends BaseActivity{
 				Log.e("ONFALIURE", responseString+"aaaaaa");
 				AppConstants.flag=0;
 
-				mBuilder.setAutoCancel(true);
-				mBuilder.setContentTitle("Failed to uplaod");
-				mBuilder.setContentText("Please check the internet connection")
-				// Removes the progress bar
-				.setProgress(0,0,false);
-				mNotifyManager.notify(0, mBuilder.build());
+				if(throwable.getCause() instanceof ConnectTimeoutException){
+					mBuilder.setAutoCancel(true);
+					mBuilder.setContentTitle("Time out connection error");
+					mBuilder.setContentText("Your internet seems soo slow")
+					// Removes the progress bar
+					.setProgress(0,0,false);
+					mNotifyManager.notify(0, mBuilder.build());
+				}else{
+
+
+
+
+					mBuilder.setAutoCancel(true);
+					mBuilder.setContentTitle("Failed to uplaod");
+					mBuilder.setContentText("Please check the internet connection")
+					// Removes the progress bar
+					.setProgress(0,0,false);
+					mNotifyManager.notify(0, mBuilder.build());
+				}
 				addTransactions(tMap);
 
 			}
@@ -396,6 +410,10 @@ public class Checklist extends BaseActivity{
 			@Override
 			public void onStart() {
 				AppConstants.flag=1;
+				mBuilder
+				.setContentTitle("Uploading....")                  
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setAutoCancel(true);
 
 			}
 
@@ -409,12 +427,25 @@ public class Checklist extends BaseActivity{
 
 				AppConstants.flag=0;
 
-				mBuilder.setAutoCancel(true);
-				mBuilder.setContentTitle("Failed to uplaod");
-				mBuilder.setContentText("Please check the internet connection")
-				// Removes the progress bar
-				.setProgress(0,0,false);
-				mNotifyManager.notify(0, mBuilder.build());
+				if(throwable.getCause() instanceof ConnectTimeoutException){
+					mBuilder.setAutoCancel(true);
+					mBuilder.setContentTitle("Time out connection error");
+					mBuilder.setContentText("Your internet seems soo slow")
+					// Removes the progress bar
+					.setProgress(0,0,false);
+					mNotifyManager.notify(0, mBuilder.build());
+				}else{
+
+
+
+
+					mBuilder.setAutoCancel(true);
+					mBuilder.setContentTitle("Failed to uplaod");
+					mBuilder.setContentText("Please check the internet connection")
+					// Removes the progress bar
+					.setProgress(0,0,false);
+					mNotifyManager.notify(0, mBuilder.build());
+				}
 
 				Toast toast =Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG);
 				toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);

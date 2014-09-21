@@ -52,10 +52,7 @@ public class BaseActivity extends Activity{
 				(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		mBuilder = new NotificationCompat.Builder(this);
 
-		mBuilder
-		.setContentTitle("Uploading....")                  
-		.setSmallIcon(R.drawable.ic_launcher)
-		.setAutoCancel(true);
+		
 
 
 		if(mSharedPreferences.getString("USERID", "").equals("")){

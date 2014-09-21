@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.http.Header;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -468,12 +469,25 @@ public class MainActivity extends Activity
 				Log.e("ONFALIURE", responseString+statusCode);
 
 
-				mBuilder.setAutoCancel(true);
-				mBuilder.setContentTitle("Failed to uplaod");
-				mBuilder.setContentText("Please check the internet connection")
-				// Removes the progress bar
-				.setProgress(0,0,false);
-				mNotifyManager.notify(0, mBuilder.build());
+				if(throwable.getCause() instanceof ConnectTimeoutException){
+					mBuilder.setAutoCancel(true);
+					mBuilder.setContentTitle("Time out connection error");
+					mBuilder.setContentText("Your internet seems soo slow")
+					// Removes the progress bar
+					.setProgress(0,0,false);
+					mNotifyManager.notify(0, mBuilder.build());
+				}else{
+
+
+
+
+					mBuilder.setAutoCancel(true);
+					mBuilder.setContentTitle("Failed to uplaod");
+					mBuilder.setContentText("Please check the internet connection")
+					// Removes the progress bar
+					.setProgress(0,0,false);
+					mNotifyManager.notify(0, mBuilder.build());
+				}
 
 				AppConstants.flag=0;
 
@@ -548,6 +562,10 @@ public class MainActivity extends Activity
 			public void onStart() {
 
 				AppConstants.flag=1;
+				mBuilder
+				.setContentTitle("Uploading Failed Transactions....")                  
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setAutoCancel(true);
 			}
 
 

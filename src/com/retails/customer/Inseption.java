@@ -395,12 +395,25 @@ public class Inseption extends BaseActivity{
 				Log.e("ONFALIURE", responseString+"aaaaaa");
 
 				AppConstants.flag=0;
-				mBuilder.setAutoCancel(true);
-				mBuilder.setContentTitle("Failed to uplaod");
-				mBuilder.setContentText("Please check the internet connection")
-				// Removes the progress bar
-				.setProgress(0,0,false);
-				mNotifyManager.notify(0, mBuilder.build());
+				if(throwable.getCause() instanceof ConnectTimeoutException){
+					mBuilder.setAutoCancel(true);
+					mBuilder.setContentTitle("Time out connection error");
+					mBuilder.setContentText("Your internet seems soo slow")
+					// Removes the progress bar
+					.setProgress(0,0,false);
+					mNotifyManager.notify(0, mBuilder.build());
+				}else{
+
+
+
+
+					mBuilder.setAutoCancel(true);
+					mBuilder.setContentTitle("Failed to uplaod");
+					mBuilder.setContentText("Please check the internet connection")
+					// Removes the progress bar
+					.setProgress(0,0,false);
+					mNotifyManager.notify(0, mBuilder.build());
+				}
 
 				addTransactions(tMap);
 
@@ -459,6 +472,10 @@ public class Inseption extends BaseActivity{
 			public void onStart() {
 
 				AppConstants.flag=1;
+				mBuilder
+				.setContentTitle("Uploading....")                  
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setAutoCancel(true);
 
 
 			}
@@ -470,7 +487,7 @@ public class Inseption extends BaseActivity{
 			public void onFailure(int statusCode, Header[] headers,
 					Throwable throwable, JSONObject errorResponse) {
 				// TODO Auto-generated method stub
-				AppConstants.flag=0;
+				
 
 				Toast toast =Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG);
 				toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
@@ -478,12 +495,25 @@ public class Inseption extends BaseActivity{
 
 				Log.e("FALIURE", errorResponse+"");
 				AppConstants.flag=0;
-				mBuilder.setAutoCancel(true);
-				mBuilder.setContentTitle("Failed to uplaod");
-				mBuilder.setContentText("Please check the internet connection")
-				// Removes the progress bar
-				.setProgress(0,0,false);
-				mNotifyManager.notify(0, mBuilder.build());
+				if(throwable.getCause() instanceof ConnectTimeoutException){
+					mBuilder.setAutoCancel(true);
+					mBuilder.setContentTitle("Time out connection error");
+					mBuilder.setContentText("Your internet seems soo slow")
+					// Removes the progress bar
+					.setProgress(0,0,false);
+					mNotifyManager.notify(0, mBuilder.build());
+				}else{
+
+
+
+
+					mBuilder.setAutoCancel(true);
+					mBuilder.setContentTitle("Failed to uplaod");
+					mBuilder.setContentText("Please check the internet connection")
+					// Removes the progress bar
+					.setProgress(0,0,false);
+					mNotifyManager.notify(0, mBuilder.build());
+				}
 
 				addTransactions(tMap);
 			}

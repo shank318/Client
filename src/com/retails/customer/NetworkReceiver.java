@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.http.Header;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,7 +73,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 			
 			temp = getFailedTransactions();
 
-			if(temp.size()>0){
+			if(temp.size()>0 && AppConstants.flag==0){
 				try {
 					uplaodTransaction(context);
 				} catch (JSONException e1) {
@@ -138,12 +139,25 @@ public class NetworkReceiver extends BroadcastReceiver {
 				Log.e("ONFALIURE", responseString+"aaaaaa");
 
 
-				mBuilder.setAutoCancel(true);
-				mBuilder.setContentTitle("Failed to uplaod");
-				mBuilder.setContentText("Please check the internet connection")
-				// Removes the progress bar
-				.setProgress(0,0,false);
-				mNotifyManager.notify(0, mBuilder.build());
+				if(throwable.getCause() instanceof ConnectTimeoutException){
+					mBuilder.setAutoCancel(true);
+					mBuilder.setContentTitle("Time out connection error");
+					mBuilder.setContentText("Your internet seems soo slow")
+					// Removes the progress bar
+					.setProgress(0,0,false);
+					mNotifyManager.notify(0, mBuilder.build());
+				}else{
+
+
+
+
+					mBuilder.setAutoCancel(true);
+					mBuilder.setContentTitle("Failed to uplaod");
+					mBuilder.setContentText("Please check the internet connection")
+					// Removes the progress bar
+					.setProgress(0,0,false);
+					mNotifyManager.notify(0, mBuilder.build());
+				}
 
 				AppConstants.flag=0;
 
@@ -215,6 +229,10 @@ public class NetworkReceiver extends BroadcastReceiver {
 			public void onStart() {
 
 				AppConstants.flag=1;
+				mBuilder
+				.setContentTitle("Uploading Failed transactions....")                  
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setAutoCancel(true);
 			}
 
 
@@ -232,14 +250,27 @@ public class NetworkReceiver extends BroadcastReceiver {
 
 				Log.e("FALIURE", errorResponse+"");
 				
-				mBuilder.setAutoCancel(true);
-				mBuilder.setContentTitle("Failed to uplaod");
-				mBuilder.setContentText("Please check the internet connection")
-				// Removes the progress bar
-				.setProgress(0,0,false);
-				mNotifyManager.notify(0, mBuilder.build());
+				if(throwable.getCause() instanceof ConnectTimeoutException){
+					mBuilder.setAutoCancel(true);
+					mBuilder.setContentTitle("Time out connection error");
+					mBuilder.setContentText("Your internet seems soo slow")
+					// Removes the progress bar
+					.setProgress(0,0,false);
+					mNotifyManager.notify(0, mBuilder.build());
+				}else{
 
-				AppConstants.flag=0;
+
+
+
+					mBuilder.setAutoCancel(true);
+					mBuilder.setContentTitle("Failed to uplaod");
+					mBuilder.setContentText("Please check the internet connection")
+					// Removes the progress bar
+					.setProgress(0,0,false);
+					mNotifyManager.notify(0, mBuilder.build());
+				}
+
+			
 
 			}
 

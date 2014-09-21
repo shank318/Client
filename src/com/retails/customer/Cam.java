@@ -1,29 +1,18 @@
 package com.retails.customer;
 
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
-import android.media.ExifInterface;
-import android.media.MediaScannerConnection;
-import android.media.MediaScannerConnection.MediaScannerConnectionClient;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -31,11 +20,9 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Toast;
-import com.retails.customer.R;
+
 
 public class Cam extends Activity implements SurfaceHolder.Callback
 {
@@ -81,8 +68,9 @@ public class Cam extends Activity implements SurfaceHolder.Callback
 				capture.setVisibility(View.VISIBLE);
 
 				releaseCamera();
-				cam=Camera.open();
+				
 				try {
+					cam=Camera.open();
 					cam.setDisplayOrientation(90);
 					cam.setPreviewDisplay(hold);
 					//cam.startPreview();
@@ -123,8 +111,9 @@ public class Cam extends Activity implements SurfaceHolder.Callback
 		// TODO Auto-generated method stub
 
 		Log.e("DEBUG", "camera opening..");
-		cam=Camera.open();
+		
 		try {
+			cam=Camera.open();
 			cam.setDisplayOrientation(90);
 			cam.setPreviewDisplay(hold);
 			cam.startPreview();
@@ -133,7 +122,9 @@ public class Cam extends Activity implements SurfaceHolder.Callback
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+			capture.setVisibility(View.INVISIBLE);
 			Log.e("DEBUG", "not opened..");
+			Toast.makeText(getApplicationContext(), "Failed to connect camera", Toast.LENGTH_LONG).show();
 		}
 
 
